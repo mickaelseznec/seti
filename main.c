@@ -83,8 +83,11 @@ int main(int argc, char* argv[])
   /* Q2_b: to be completed, make sure there is no deadlock
    * when using lock1 and lock2
    */
-  pthread_mutex_init(&lock1, NULL);
-  pthread_mutex_init(&lock2, NULL);
+  pthread_mutexattr_t lock_attr;
+  pthread_mutexattr_setprotocol(&lock_attr, PTHREAD_PRIO_PROTECT);
+  pthread_mutexattr_setprioceiling(&lock_attr, max_prio - 1);
+  pthread_mutex_init(&lock1, &lock_attr);
+  pthread_mutex_init(&lock2, &lock_attr);
 
 
   init_periodic_config(&T1_info);
