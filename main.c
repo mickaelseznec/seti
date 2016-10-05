@@ -83,6 +83,8 @@ int main(int argc, char* argv[])
   /* Q2_b: to be completed, make sure there is no deadlock
    * when using lock1 and lock2
    */
+  pthread_mutex_init(&lock1, NULL);
+  pthread_mutex_init(&lock2, NULL);
 
 
   init_periodic_config(&T1_info);
@@ -144,11 +146,15 @@ void T1_body()
   {
     display_relative_date("Start thread T1", (T1_info.periodic_config).iteration_counter);
     /*Q2_a: acquire lock2*/
+    pthread_mutex_lock(&lock2);
     simulate_exec_time(200000000); // 200 ms;
     /*Q2_a: acquire lock1*/
+    pthread_mutex_lock(&lock1);
     simulate_exec_time(100000000); // 100 ms;
     /*Q2_a: release lock1*/
+    pthread_mutex_unlock(&lock1);
     /*Q2_a: release lock2*/
+    pthread_mutex_unlock(&lock2);
     simulate_exec_time(100000000); // 100 ms;
 
     static char c = 0;
@@ -179,11 +185,15 @@ void T2_body()
   {
     display_relative_date("Start thread T2", (T2_info.periodic_config).iteration_counter);
     /*Q2_a: acquire lock1*/
+    pthread_mutex_lock(&lock1);
     simulate_exec_time(600000000); // 600 ms;
     /*Q2_a: acquire lock2*/
+    pthread_mutex_lock(&lock2);
     simulate_exec_time(100000000); // 100 ms;
     /*Q2_a: release lock2*/
+    pthread_mutex_unlock(&lock2);
     /*Q2_a: release lock1*/
+    pthread_mutex_unlock(&lock1);
     simulate_exec_time(100000000); // 100 ms;
     printf("Finish thread T2\n");
 
