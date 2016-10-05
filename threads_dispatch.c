@@ -59,6 +59,8 @@ int create_fp_thread (unsigned int priority,
   /*
    * Q1: to be completed, set the priority of tid
    */
+  param.sched_priority = priority;
+  pthread_attr_setschedparam(&attr, &param);
 
   sys_ret = pthread_create (tid, &attr, (void* (*)(void*))start_routine, NULL);
 
@@ -91,6 +93,9 @@ StatusType await_periodic_dispatch(thread_config_t * config)
   /* Q1: to be completed, block the thread until the next occurence of
    * the period
    */
+  info->iteration_counter++;
+  struct timespec next_stop = {start_timespec.tv_sec + info->iteration_counter * (info->period / 1000), start_timespec.tv_nsec};
+  clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next_stop, NULL);
 
   return E_OK;
 }

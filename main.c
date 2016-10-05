@@ -52,6 +52,10 @@ sporadic_thread_config_t T3_info = {6000,
  * ready to start all together).
  */
 
+static int num_thread_ready = 0;
+static const int thread_to_wait = 2;
+pthread_mutex_t barrier_mutex;
+pthread_cond_t barrier_cond, start_cond;
 
 pthread_mutex_t lock1;
 pthread_mutex_t lock2;
@@ -72,6 +76,9 @@ int main(int argc, char* argv[])
   /* Q1: to be completed, initialize mutexes and conditional variables
      you decided to use to answer this question */
 
+  pthread_mutex_init(&barrier_mutex, NULL);
+  pthread_cond_init(&barrier_cond, NULL);
+  pthread_cond_init(&start_cond, NULL);
 
   /* Q2_b: to be completed, make sure there is no deadlock
    * when using lock1 and lock2
@@ -98,12 +105,24 @@ int main(int argc, char* argv[])
 
   /* Q1: to be completed, make sure threads have been initialized */
 
+  pthread_mutex_lock(&barrier_mutex);
+  while(num_thread_ready < thread_to_wait) {
+      printf("Wait for threads to be created, ready=%d\n", num_thread_ready);
+      pthread_cond_wait(&barrier_cond, &barrier_mutex);
+  }
   set_start_time();
+  printf("Main says: let's go\n");
+  pthread_cond_broadcast(&start_cond);
+  pthread_mutex_unlock(&barrier_mutex);
+
+  printf("Started\n");
 
   /* Q1: to be completed, release threads; note that the start date
    * has been registered when calling set_start_time. Also make sure
    * the main does not abort threads.
    */
+  pthread_join(T1_tid, NULL);
+  pthread_join(T2_tid, NULL);
 }
 
 
@@ -111,6 +130,16 @@ void T1_body()
 {
   simulate_exec_time(500000000); // 500 ms; simulate initialization time
   /* Q1: to be completed, start T1 at the same date as other threads */
+
+  pthread_mutex_lock(&barrier_mutex);
+  num_thread_ready++;
+  if (num_thread_ready >= thread_to_wait)
+      pthread_cond_signal(&barrier_cond);
+
+  printf("T1 waits for everyone to be ready\n");
+  pthread_cond_wait(&start_cond, &barrier_mutex);
+  pthread_mutex_unlock(&barrier_mutex);
+
   while(1)
   {
     display_relative_date("Start thread T1", (T1_info.periodic_config).iteration_counter);
@@ -137,6 +166,15 @@ void T1_body()
 void T2_body()
 {
   /* Q1: to be completed, start T2 at the same date as other threads */
+  pthread_mutex_lock(&barrier_mutex);
+  num_thread_ready++;
+  if (num_thread_ready >= thread_to_wait)
+      pthread_cond_signal(&barrier_cond);
+
+  printf("T2 waits for everyone to be ready\n");
+  pthread_cond_wait(&start_cond, &barrier_mutex);
+  pthread_mutex_unlock(&barrier_mutex);
+
   while(1)
   {
     display_relative_date("Start thread T2", (T2_info.periodic_config).iteration_counter);
