@@ -53,7 +53,7 @@ sporadic_thread_config_t T3_info = {6000,
  */
 
 static int num_thread_ready = 0;
-static const int thread_to_wait = 2;
+static const int thread_to_wait = 3;
 pthread_mutex_t barrier_mutex;
 pthread_cond_t barrier_cond, start_cond;
 
@@ -107,6 +107,8 @@ int main(int argc, char* argv[])
   /* Q3: to be completed, use function create_fp_thread to create
      thread T3
    */
+  pthread_t T3_tid;
+  create_fp_thread(max_prio-3, 40960, (void*) T3_body, &T3_tid, SCHED_FIFO);
 
   /* Q1: to be completed, make sure threads have been initialized */
 
@@ -210,6 +212,15 @@ void T2_body()
 void T3_body()
 {
   /* Q3: to be completed, start T3 at the same date as other threads */
+  pthread_mutex_lock(&barrier_mutex);
+  num_thread_ready++;
+  if (num_thread_ready >= thread_to_wait)
+      pthread_cond_signal(&barrier_cond);
+
+  printf("T3 waits for everyone to be ready\n");
+  pthread_cond_wait(&start_cond, &barrier_mutex);
+  pthread_mutex_unlock(&barrier_mutex);
+
   while(1)
   {
     StatusType status = await_sporadic_dispatch(T3_info.global_q);

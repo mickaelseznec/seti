@@ -74,6 +74,8 @@ int init_sporadic_config (thread_config_t * config)
   int ret;
   /*Q3: to be completed with the dynamic initialization of fields in
     info (e.g. coditional variables, mutexes, etc.) */
+  pthread_mutex_init(info->global_q->rez, NULL);
+  pthread_cond_init(info->global_q->event, NULL);
   return ret;
 }
 
