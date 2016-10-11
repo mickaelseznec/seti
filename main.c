@@ -151,15 +151,15 @@ void T1_body()
   {
     display_relative_date("Start thread T1", (T1_info.periodic_config).iteration_counter);
     /*Q2_a: acquire lock2*/
-    pthread_mutex_lock(&lock2);
+    //pthread_mutex_lock(&lock2);
     simulate_exec_time(200000000); // 200 ms;
     /*Q2_a: acquire lock1*/
-    pthread_mutex_lock(&lock1);
+    //pthread_mutex_lock(&lock1);
     simulate_exec_time(100000000); // 100 ms;
     /*Q2_a: release lock1*/
-    pthread_mutex_unlock(&lock1);
+    //pthread_mutex_unlock(&lock1);
     /*Q2_a: release lock2*/
-    pthread_mutex_unlock(&lock2);
+    //pthread_mutex_unlock(&lock2);
     simulate_exec_time(100000000); // 100 ms;
 
     static char c = 0;
@@ -190,15 +190,15 @@ void T2_body()
   {
     display_relative_date("Start thread T2", (T2_info.periodic_config).iteration_counter);
     /*Q2_a: acquire lock1*/
-    pthread_mutex_lock(&lock1);
+    //pthread_mutex_lock(&lock1);
     simulate_exec_time(600000000); // 600 ms;
     /*Q2_a: acquire lock2*/
-    pthread_mutex_lock(&lock2);
+    //pthread_mutex_lock(&lock2);
     simulate_exec_time(100000000); // 100 ms;
     /*Q2_a: release lock2*/
-    pthread_mutex_unlock(&lock2);
+    //pthread_mutex_unlock(&lock2);
     /*Q2_a: release lock1*/
-    pthread_mutex_unlock(&lock1);
+    //pthread_mutex_unlock(&lock1);
     simulate_exec_time(100000000); // 100 ms;
     printf("Finish thread T2\n");
 

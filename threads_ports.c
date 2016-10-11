@@ -141,11 +141,13 @@ StatusType ReceiveInputs_runtime(thread_queue_t * global_q, int port_id)
   else
     discarded_msg_nb = port_q->last_idx-port_q->first_idx;
 
+#if 0
   if(port_q->write_idx != port_q->last_idx)
   { // new messages received
     port_q->first_idx = (port_q->last_idx+1) % port_q->queue_size;  
   }
   else
+#endif
     port_q->first_idx = port_q->last_idx;
   
   port_q->last_idx = port_q->write_idx;

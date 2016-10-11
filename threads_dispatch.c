@@ -104,10 +104,16 @@ StatusType await_periodic_dispatch(thread_config_t * config)
 
 StatusType await_sporadic_dispatch(thread_queue_t * global_q)
 {
+  static int first_time = 1;
   thread_config_t * config = global_q->task;
   sporadic_thread_config_t * info = &config->sporadic_config;
 
   StatusType status = E_OK;
+
+  if (first_time == 1) {
+      *info->sporadic_timespec = start_timespec;
+      first_time = 0;
+  }
 
   // wait next period
   if(info->timing_wait_phase)
@@ -141,6 +147,7 @@ StatusType await_sporadic_dispatch(thread_queue_t * global_q)
    * we need to put the sporadic thread asleep. Store in
    * info->sporadic_timespec
    */
+
   
   return status;
 }
@@ -157,6 +164,6 @@ void display_relative_date(char * id, unsigned long iteration)
   clock_gettime(CLOCK_MONOTONIC, &current_timespec);
   unsigned long sec = current_timespec.tv_sec-start_timespec.tv_sec;
   unsigned long nsec = current_timespec.tv_nsec-start_timespec.tv_nsec;
-  printf("%s - date: %ld sec: %ld nsec - iteration %ld\n", id, sec, nsec, iteration);
+  printf("%s - date: %lu sec: %lu nsec - iteration %ld\n", id, sec, nsec, iteration);
 #endif
 }
