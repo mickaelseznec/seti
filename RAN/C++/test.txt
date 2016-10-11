@@ -1,0 +1,14 @@
+Vertex 0 at x=1.000000 y=0.000000
+Vertex 1 at x=0.000000 y=1.000000
+Vertex 2 at x=-1.000000 y=0.000000
+Vertex 3 at x=-0.000000 y=-1.000000
+Figure 1
+Vertex 0 at x=1.000000 y=0.000000
+Vertex 1 at x=0.000000 y=1.000000
+Vertex 2 at x=-1.000000 y=0.000000
+Vertex 3 at x=-0.000000 y=-1.000000
+Figure 2
+Vertex 0 at x=1.000000 y=0.000000
+Vertex 1 at x=0.000000 y=1.000000
+Vertex 2 at x=-1.000000 y=0.000000
+Vertex 3 at x=-0.000000 y=-1.000000
