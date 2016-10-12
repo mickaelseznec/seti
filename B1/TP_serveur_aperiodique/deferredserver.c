@@ -11,6 +11,7 @@ void *runDeferredServer (void *t){
   TimeSpan           l = 0;
   Time               d = 0;
   int                i;
+  int                overlap;
 
   s = periodicTaskTable[*(int *)t];
 
@@ -46,12 +47,15 @@ void *runDeferredServer (void *t){
 	  }
 
           // Remove PRODUCE event and then wait for its activation time.
-          NYI("remove event and wait for its activation");
+          removeEvent(i);
+          delayUntil(e.activation);
 
           // Update the server budget and schedule the next PRODUCE
           // event. To do so compute the next activation time and the
           // computation time related to this replenishment event.
-          NYI("update server budget and schedule replenishment");
+          e.activation  = nextActivation (s.period);
+          appendEvent (e);
+          s.computation = e.computation;
 
           // Print the arrival of this event
 	  putHeader (s.name);
@@ -82,10 +86,13 @@ void *runDeferredServer (void *t){
 
     if (e.kind == PRODUCE) {
       // Remove Produce event and then wait for its activation time
-      NYI("remove event and wait for its activation time");
+      removeEvent(0);
+      delayUntil(e.activation);
 
       // Update the server budget. And schedule the next replenishment.
-      NYI ("update server budget and schedule its replenishment");
+      e.activation  = nextActivation (s.period);
+      appendEvent (e);
+      s.computation = e.computation;
 
       // Print the event pushed in the queue
       putHeader (s.name);
@@ -98,8 +105,9 @@ void *runDeferredServer (void *t){
       
     } else {
 
+      overlap = 0;
       // Wait for event activation
-      NYI("wait for event activation");
+      delayUntil(e.activation);
 
       
       // Evaluate the computation time that can be possibly allocated to
@@ -109,15 +117,24 @@ void *runDeferredServer (void *t){
       // order to take into account a replenishment that would happen
       // while handling an event. As a consequence, the final
       // computation time must not last after the next replenishment.
-      NYI("evaluate computation time that does not overlap with replishment");
+      c = (s.computation > e.computation) ? e.computation : s.computation;
+
+      if (e.activation + c > nextActivation(s.period)) {
+          overlap = 1;
+          c = nextActivation(s.period) - e.activation;
+      }
 
       // Update computation time needed to complete event in queue.
       // Remove the event once it is completed.
       // Do not update server budget yet.
       // We want to print the server status before and after this operation.
-      NYI("evaluate remaining computation time of current event");
-      NYI("remove event when completed");
-      NYI("update event in queue when not completed");
+      //printf("Will compute for %d sec (task = %d)\n", c, e.computation);
+      e.computation -= c;
+      if (e.computation <= 0) {
+          removeEvent(0);
+      } else {
+          setEvent(0, e);
+      }
 
       // Print status of both server and event status
       putHeader    (s.name);
@@ -139,21 +156,22 @@ void *runDeferredServer (void *t){
       // worst case execution time, and the period of the server.
       // ATTENTION : the period parameter in computeDuringTimeSPan is
       // used to compute the execution priority. See tasks.h.
-      NYI("update server budget");
-      NYI("compute event");
+      s.computation -= c;
+      computeDuringTimeSpan(s.name, d, s.period);
 
       // When the computation overlaps with a replenishment, we limit
       // the computation time to let this event arises. But we need to
       // force the server to extract a PRODUCE event. In this specific
       // case, force the server budget to zero.
-     NYI("set server budget to zero to force the replenishment");
+      if (overlap)
+          s.computation = 0;
 
       // Print event completion if needed
-     if (e.computation == 0) {
-	putHeader    (s.name);
-	putString    ("completed ");
-	putString    (e.name);
-	newLine ();
+      if (e.computation == 0) {
+          putHeader    (s.name);
+          putString    ("completed ");
+          putString    (e.name);
+          newLine ();
       }
     }
   }
