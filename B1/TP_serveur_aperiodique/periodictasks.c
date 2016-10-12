@@ -40,8 +40,7 @@ void *runPeriodicTask (void *t){
     // compute the execution priority. It returns the completion time
     // that should be used to check whether the task missed its
     // deadline. Use variable c to save this value. See tasks.h.
-    NYI("compute task for its computation time");
-    NYI("save the completion time in variable c for later use");
+    c = computeDuringTimeSpan(s.name, s.computation, s.period);
 
     putHeader (s.name);
     putString ("completed");
@@ -59,7 +58,7 @@ void *runPeriodicTask (void *t){
     };
 
     // Wait for the next activation. In other words, wait for the deadline.
-    NYI("wait for the next activation");
+    delayUntil(d);
   }
 
   return NULL;
