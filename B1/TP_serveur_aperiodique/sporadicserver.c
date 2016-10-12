@@ -27,10 +27,11 @@ void *runSporadicServer (void *t){
 	  }
 
           // Remove PRODUCE event and then wait for its activation time.
-          NYI("remove event and wait for its activation");
+          removeEvent(i);
+          delayUntil(e.activation);
 
 	  // Update the server budget
-          NYI("update server budget");
+          s.computation = e.computation;
 
            // Print the arrival of this event
           putHeader (s.name);
@@ -52,10 +53,12 @@ void *runSporadicServer (void *t){
     if (e.kind == PRODUCE) {
 
       // Remove PRODUCE event and then wait for its activation time
-      NYI("remove event and wait for its activation time");
+      removeEvent(i);
+      delayUntil(e.activation);
+
 
       // Update server budget
-      NYI("update server budget");
+      s.computation = e.computation;
 
       // Print the arrival of this event
       putHeader (s.name);
@@ -69,18 +72,26 @@ void *runSporadicServer (void *t){
       // Evaluate the computation time needed to handle this
       // event that is the computation time requested and the
       // one available on the server.
-      NYI ("evaluate computation time for event");
+      if (e.computation > s.computation)
+          c = s.computation;
+      else
+          c = e.computation;
+
 
       // Wait for event activation
-      NYI("wait for event activation");
+      delayUntil(e.activation);
 
       // Update computation time needed to complete event in queue.
       // Remove the event once it is completed.
       // Do not update server budget yet.
       // We want to print the server status before and after this operation.
-      NYI("evaluate remaining computation time of current event");
-      NYI("remove event when completed");
-      NYI("update event in queue when not completed");
+      e.computation -= c;
+      if (e.computation <= 0) {
+          removeEvent(0);
+      } else {
+          setEvent(0, e);
+      }
+
 
       // Print status of both server and event status
       putHeader    (s.name);
@@ -96,9 +107,13 @@ void *runSporadicServer (void *t){
       newLine ();
 
       // Schedule the replenishment with the appropriate computation time
+      s.computation -= c;
+
       p.kind = PRODUCE;
       p.name = s.name;
-      NYI("schedule the replenish event");
+      p.computation = c;
+      p.activation  = roundClock(localClock()) + s.period;
+      appendEvent (p);
 
       // Print the event pushed in the queue
       putHeader (s.name);
@@ -118,8 +133,7 @@ void *runSporadicServer (void *t){
       // server. ATTENTION : the period parameter in
       // computeDuringTimeSPan is used to compute the execution
       // priority. See tasks.h.
-      NYI("update server budget");
-      NYI("compute event");
+      computeDuringTimeSpan(s.name, c, s.period);
 
       // Print event completion if needed
       if (e.computation == 0) {
