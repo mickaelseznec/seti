@@ -15,7 +15,7 @@ void *runBackgroundServer (void *t){
     e = getEvent(firstEvent);
     
     // Wait for event activation
-    NYI("wait for event activation");
+    delayUntil(e.activation);
 
     putHeader(s.name);
     putString(s.name);
@@ -26,14 +26,14 @@ void *runBackgroundServer (void *t){
     newLine();
 
     // Remove first event from event queue
-    NYI("remove event and wait for activation");
+    removeEvent(0);
 
     // Simulate the execution of this event using
     // computeDuringTimeSpan. Provide the name of the event, its worst
     // case execution time, and the period of the server. ATTENTION :
     // the period parameter in computeDuringTimeSPan is used to
     // compute the execution priority. See in tasks.h.
-    NYI("compute event");
+    computeDuringTimeSpan(s.name, e.computation, s.period);
 
     // Print event completion
     putHeader(s.name);
