@@ -37,7 +37,8 @@ void *runPollingServer (void *t){
 
     // When the first event to handle happens in the future, release the
     // server budget
-    NYI("if next event happens in the future, release the server budget");
+    if (timeSpanBeforeTime(e.activation) > 0)
+        s.computation = 0;
 
     // Before handling next event check the server budget is not empty
     if (s.computation == 0) {
@@ -51,12 +52,16 @@ void *runPollingServer (void *t){
 	  }
 
 	  // Remove PRODUCE event and then wait for its activation time.
-	  NYI("remove event and wait for its activation");
+          removeEvent(i);
+          delayUntil(e.activation);
+
 	  
 	  // Update the server budget and schedule the next PRODUCE
 	  // event. To do so compute the next activation time and the
 	  // computation time related to this replenishment event.
-	  NYI("update server budget and schedule replenishment");
+          e.activation  = nextActivation (s.period);
+          appendEvent (e);
+          s.computation = e.computation;
 
 	  // Print the arrival of this event
 	  putHeader (s.name);
@@ -87,11 +92,16 @@ void *runPollingServer (void *t){
 
     if (e.kind == PRODUCE) {
       // Remove PRODUCE event and then wait for its activation time
-      NYI("remove event and wait for its activation time");
+      removeEvent(0);
 
       // As there are no Consume events to handle, the server discards
       // its budget. But it schedules its replenishment.
-      NYI ("update server budget and schedule its replenishment");
+      e.activation  = nextActivation (s.period);
+      e.computation = s.computation;
+      appendEvent (e);
+
+      s.computation = 0;
+
 
       // Print the event pushed in the queue
       putHeader (s.name);
@@ -106,20 +116,26 @@ void *runPollingServer (void *t){
     } else {
 
       // Wait for event activation
-      NYI("wait for event activation");
+      delayUntil(e.activation);
 
       // Evaluate the computation time needed to handle this
       // event that is the computation time requested and the
       // one available on the server.
-      NYI ("evaluate computation time for event");
+      if (e.computation > s.computation)
+          c = s.computation;
+      else
+          c = e.computation;
 
       // Update computation time needed to complete event in queue.
       // Remove the event once it is completed.
       // Do not update server budget yet.
       // We want to print the server status before and after this operation.
-      NYI("evaluate remaining computation time of current event");
-      NYI("remove event when completed");
-      NYI("update event in queue when not completed");
+      e.computation -= c;
+      if (e.computation <= 0) {
+          removeEvent(0);
+      } else {
+          setEvent(0, e);
+      }
 
       // Print status of both server and event status
       putHeader    (s.name);
@@ -135,14 +151,14 @@ void *runPollingServer (void *t){
       newLine ();
       
       // Update the server budget after this operation.
+      s.computation -= c;
       
       // Simulate the execution of this event using
       // computeDuringTimeSpan. Provide the name of the event, its
       // worst case execution time, and the period of the server.
       // ATTENTION : the period parameter in computeDuringTimeSPan is
       // used to compute the execution priority. See tasks.h.
-      NYI("update server budget");
-      NYI("compute event");
+      computeDuringTimeSpan(s.name, d, s.period);
 
       // Print event completion if needed
       if (e.computation == 0) {
