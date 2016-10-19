@@ -1,0 +1,33 @@
+//**** jumptable (source: llvm)
+// TODO: find corresponding C and assembly code (Exercise 1).
+multibranch 0x20b00 to "processSensorData"+0x70,
+                       "processSensorData"+0x1b0,
+                       "processSensorData"+0x320,
+                       "processSensorData"+0x460;
+
+//****
+loop "main"+0x4c 32;
+loop "main"+0x150 10; // assumed bound
+
+//****
+// TODO: find tighter loop bound, later, specify loop bounds depending on
+// calling context (Exercise 2).
+//loop "fixFilter"+0x24 10000;
+//loop "fixFilter"+0x24 256;
+loop "fixFilter"+0x24 32 in @0x2070c;
+loop "fixFilter"+0x24 32 in @0x2070c;
+
+
+//****
+loop "calibrateArom"+0x48 128;
+loop "calibrateArom"+0xf0 128;
+loop "calibrateArom"+0x190 128;
+
+//****
+loop "processSensorData"+0xb8 8;
+loop "processSensorData"+0x214 32;
+loop "processSensorData"+0x384 32;
+loop "processSensorData"+0x4c0 32;
+
+//****
+loop "runFlightPlan"+0x1bc 1; // watchdog loop

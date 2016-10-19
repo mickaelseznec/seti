@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otawa-script
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<platform>
+	<xi:include href="patmos_wcet/pipeline.xml"/>
+	<xi:include href="patmos_wcet/memory.xml"/>
+	<xi:include href="patmos_wcet/caches.xml"/>
+</platform>
+
+<script>
+  <config name="otawa::ILPNAME" value="out/ipet.lp"/>
+  <config name="otawa::ipet::EXPLICIT" value="true"/>
+
+  <!-- <step require="otawa::VIRTUALIZED_CFG_FEATURE" /> -->
+  <step processor="tcrest::patmos_wcet::BBTimer">
+    <config name="otawa::GRAPHS_OUTPUT_DIRECTORY" value="out"/>
+  </step>
+
+  <!-- WCET computation -->
+  <step require="tcrest::patmos::METHOD_CACHE_CONTRIBUTION_FEATURE"/>
+  <step require="otawa::ipet::WCET_FEATURE"/>
+
+  <step processor="otawa::ipet::WCETCountRecorder"/>
+  <step processor="otawa::display::CFGOutput">
+    <config name="otawa::display::CFGOutput::PATH" value="out"/>
+  </step>
+  <!--  TODO: uncomment the following line (Exercise 4) /> -->
+  <!-- <step processor="otawa::BBRatioDisplayer" /> -->
+</script>
+
+</otawa-script>
+

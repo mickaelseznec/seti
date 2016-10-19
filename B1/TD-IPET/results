@@ -1,0 +1,16 @@
+1- Control flow reconstruction
+
+First WCET:
+WCET[main] = 1061372 cycles
+
+"for loop" corresponds to BB5.
+
+When the compiler finds a switch statement, it is often optimised using dynamic branching (see jumptable). Ottawa cannot staticaly knows where the program would actually jumps so we have to indicate him what are the possibilities.
+
+2- Loop bounds
+
+By analysing manually all functions calls, we see that "size" is at most 8, hence a maximum of 256 loops.
+By changing this parameter:
+WCET[main] = 38252 cycles
+
+When using the VIRTUALIZED_CFG_FEATURE Ottawa inlines every function call. In fact, it does not assume that the executing time of the function is context independent so it has to recalculate it each time.
