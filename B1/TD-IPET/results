@@ -1,4 +1,4 @@
-1- Control flow reconstruction
+#1- Control flow reconstruction
 
 First WCET:
 WCET[main] = 1061372 cycles
@@ -7,7 +7,7 @@ WCET[main] = 1061372 cycles
 
 When the compiler finds a switch statement, it is often optimised using dynamic branching (see jumptable). Ottawa cannot staticaly knows where the program would actually jumps so we have to indicate him what are the possibilities.
 
-2- Loop bounds
+#2- Loop bounds
 
 By analysing manually all functions calls, we see that "size" is at most 8, hence a maximum of 256 loops.
 By changing this parameter:
@@ -17,3 +17,23 @@ When using the VIRTUALIZED_CFG_FEATURE Ottawa inlines every function call. In fa
 
 When tunning each call with the right loop size, we find:
 WCET[main] = 33886 cycles
+
+#4- Implicit path enumeration
+###Equations associated with e21:
+Objective function (the weight corresponds to the time spend in block):
+max(... +7 e19_21_main +4 e21_20_main +7 e21_21_main + ...)
+
+###Bounded loop equation:
+-32 e19_21_main +e21_21_main <= 0;
+
+###Kirchoff Laws:
+-e21_20_main +x21_main -e21_21_main = 0;
+-e19_21_main +x21_main -e21_21_main = 0;
+-e18_20_main +x20_main -e21_20_main = 0;
+
+Using lp_solve, we also find the same result:
+Value of objective function: 33886
+
+We add the following equation to produce exclusive path:
+-e12_50_main + e50_51_main + e52_53_main + e54_55_main + e56_58_main + e59_61_main = 0;
+
