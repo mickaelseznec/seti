@@ -14,3 +14,6 @@ By changing this parameter:
 WCET[main] = 38252 cycles
 
 When using the VIRTUALIZED_CFG_FEATURE Ottawa inlines every function call. In fact, it does not assume that the executing time of the function is context independent so it has to recalculate it each time.
+
+When tunning each call with the right loop size, we find:
+WCET[main] = 33886 cycles

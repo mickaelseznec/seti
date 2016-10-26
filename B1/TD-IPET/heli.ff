@@ -14,9 +14,14 @@ loop "main"+0x150 10; // assumed bound
 // calling context (Exercise 2).
 //loop "fixFilter"+0x24 10000;
 //loop "fixFilter"+0x24 256;
-loop "fixFilter"+0x24 32 in @0x2070c;
-loop "fixFilter"+0x24 32 in @0x2070c;
-
+loop "fixFilter"+0x24 32  in @0x2070c;
+loop "fixFilter"+0x24 128 in @0x208ec;
+loop "fixFilter"+0x24 128 in @0x2098c;
+loop "fixFilter"+0x24 128 in @0x20a2c;
+loop "fixFilter"+0x24 32  in @0x20bbc;
+loop "fixFilter"+0x24 128 in @0x20d0c;
+loop "fixFilter"+0x24 128 in @0x20e7c;
+loop "fixFilter"+0x24 256 in @0x20fbc;
 
 //****
 loop "calibrateArom"+0x48 128;
