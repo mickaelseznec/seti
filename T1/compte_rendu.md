@@ -3,55 +3,59 @@
 ##En fonction de la taille du vecteur
 
 ###N=1000
-Evaluation : N=1000, type=float
-ZERO	7.68706
-ZERO	2.57014
-ZERO	2.47794
-ZERO	2.46685
-ZERO	2.4805
-ZERO	2.48305
-ZERO	2.46335
-ZERO	2.40034
-ZERO	2.38195
-ZERO	2.39053
+|Evaluation : N=1000, type=float|
+|---|
+|ZERO	7.68706|
+|ZERO	2.57014|
+|ZERO	2.47794|
+|ZERO	2.46685|
+|ZERO	2.4805|
+|ZERO	2.48305|
+|ZERO	2.46335|
+|ZERO	2.40034|
+|ZERO	2.38195|
+|ZERO	2.39053|
 
-Evaluation : N=1000, type=int
-ZERO	7.32429
-ZERO	2.47117
-ZERO	2.33191
-ZERO	2.34047
-ZERO	2.34003
-ZERO	2.33227
-ZERO	2.34732
-ZERO	2.34068
-ZERO	2.35994
-ZERO	2.25084
+|Evaluation : N=1000, type=int|
+|---|
+|ZERO	7.32429|
+|ZERO	2.47117|
+|ZERO	2.33191|
+|ZERO	2.34047|
+|ZERO	2.34003|
+|ZERO	2.33227|
+|ZERO	2.34732|
+|ZERO	2.34068|
+|ZERO	2.35994|
+|ZERO	2.25084|
 
 ###N=10000
-Evaluation : N=10000, type=float
-ZERO	5.1966
-ZERO	1.52408
-ZERO	1.48442
-ZERO	1.47884
-ZERO	1.48083
-ZERO	1.49095
-ZERO	1.49259
-ZERO	1.47988
-ZERO	1.48125
-ZERO	1.48449
+|Evaluation : N=10000, type=float|
+|---|
+|ZERO	5.1966|
+|ZERO	1.52408|
+|ZERO	1.48442|
+|ZERO	1.47884|
+|ZERO	1.48083|
+|ZERO	1.49095|
+|ZERO	1.49259|
+|ZERO	1.47988|
+|ZERO	1.48125|
+|ZERO	1.48449|
 
 ###N=10
-Evaluation : N=10, type=float
-ZERO	5.1
-ZERO	3.14
-ZERO	3.32
-ZERO	3.3
-ZERO	3.4
-ZERO	3.48
-ZERO	3.4
-ZERO	3.48
-ZERO	3.3
-ZERO	3.58
+|Evaluation : N=10, type=float|
+|---|
+|ZERO	5.1|
+|ZERO	3.14|
+|ZERO	3.32|
+|ZERO	3.3|
+|ZERO	3.4|
+|ZERO	3.48|
+|ZERO	3.4|
+|ZERO	3.48|
+|ZERO	3.3|
+|ZERO	3.58|
 
 
 Pour chaque appel à la boucle de mise à zéro, on donne le temps moyen par itération (en nombre de cycles).
@@ -168,19 +172,22 @@ Utilisation du SIMD intel. On met les zéros vecteur après vecteur.
 
 ###Optimisation O3
 
-Evaluation : N=1000, type=float
-ZERO	6.28453
-ZERO	1.61179
-ZERO	1.43273
-ZERO	1.27143
-ZERO	1.29315
-ZERO	1.25718
-ZERO	1.24528
-ZERO	1.2684
-ZERO	1.2442
-ZERO	1.26777
+|Evaluation : N=1000, type=float|
+|---|
+|ZERO	6.28453|
+|ZERO	1.61179|
+|ZERO	1.43273|
+|ZERO	1.27143|
+|ZERO	1.29315|
+|ZERO	1.25718|
+|ZERO	1.24528|
+|ZERO	1.2684|
+|ZERO	1.2442|
+|ZERO	1.26777|
 
+``` assembly
 	call	memset
+```
 
 Appel direct de la fonction memset déjà optimisée.
 
@@ -189,28 +196,29 @@ Appel direct de la fonction memset déjà optimisée.
 ##En fonction de la taille
 
 ###N=10
-Evaluation : N=10, type=int
-COPY_ij	7.92
-COPY_ij	5.78
-COPY_ij	4.42
-COPY_ij	4.92
-COPY_ij	4.5
-COPY_ij	4.52
-COPY_ij	4.42
-COPY_ij	4.5
-COPY_ij	4.58
-COPY_ij	5.36
-
-COPY_ji	11.48
-COPY_ji	7.14
-COPY_ji	7.22
-COPY_ji	7.22
-COPY_ji	7.22
-COPY_ji	7.22
-COPY_ji	7.38
-COPY_ji	7.22
-COPY_ji	7.32
-COPY_ji	7.14
+|Evaluation : N=10, type=int|
+|---|
+|COPY_ij	7.92|
+|COPY_ij	5.78|
+|COPY_ij	4.42|
+|COPY_ij	4.92|
+|COPY_ij	4.5|
+|COPY_ij	4.52|
+|COPY_ij	4.42|
+|COPY_ij	4.5|
+|COPY_ij	4.58|
+|COPY_ij	5.36|
+||
+|COPY_ji	11.48|
+|COPY_ji	7.14|
+|COPY_ji	7.22|
+|COPY_ji	7.22|
+|COPY_ji	7.22|
+|COPY_ji	7.22|
+|COPY_ji	7.38|
+|COPY_ji	7.22|
+|COPY_ji	7.32|
+|COPY_ji	7.14|
 
 ###N=1000
 
