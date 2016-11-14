@@ -2,7 +2,7 @@
 
 #define N 1000		// la taille des matrices/vecteurs
 #define M 10		// nombre d'itérations de chaque fonction
-#define TYPE float	// ou double ou int, etc. On peut essayer les
+#define TYPE int	// ou double ou int, etc. On peut essayer les
 			// différents types de vecteurs
 
 
@@ -38,7 +38,7 @@ void exemple(){
 }
 
 
-TYPE AF[N][N], YF[N][N], XF[N][N], YT[N][N],	// matrices [N][N]
+TYPE AF[N][N], YF[N][N], XF[N][N], YT[N][N], XT[N][N],	// matrices [N][N]
   BF[N*N], CF[N*N],				// vecteurs N^2
   SF;						// accumulateur
 
@@ -197,7 +197,7 @@ void mm_ikj()
 	      YF[i][j]+=SF*XF[k][j];
 	  }
       benchtime=dtime() - begin;
-      printf ("MM_ijk\t%g\n", (double) benchtime*N3inv);
+      printf ("MM_ikj\t%g\n", (double) benchtime*N3inv);
     }
   printf ("\n");
 }
@@ -229,18 +229,44 @@ void mm_b_ijk(){
   printf ("\n");
 }
 
+void mm_trans() {
+  int i, j, m, sum, k;
+  
+  for (m=0;m<M;m++)
+    {
+      begin=dtime();
+      for (i=0;i<N;i++)
+        for (j=0;j<N;j++)
+	  XT[j][i]=XF[i][j];
+
+      for (i=0;i<N;i++)
+	for (j=0;j<N;j++)
+	  {
+	    SF=0.0;
+	    for (k=0; k<N; k++)
+	      SF+=AF[i][k]*XT[j][k];
+	    YF[i][j]=SF;
+	  }
+
+      benchtime=dtime() - begin;
+      printf ("MM_TRANS\t%g\n", (double) benchtime*N3inv);
+    }
+  printf ("\n");
+}
+
 
 
 void main()
 {
   printf("Evaluation : N=%d, type="STR(TYPE)"\n",N);
-  zero();
-//  copy_ij();
+//  zero();
+//   copy_ij();
 //  copy_ji();
 //  add_ij();
 //  add_ji();
 //  ps();
-//  mm_ijk();
-//  mm_ikj();
-//  mm_b_ijk();
+  mm_ijk();
+  mm_ikj();
+  mm_b_ijk();
+  mm_trans();
 } 
